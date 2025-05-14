@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login | Grocery Express</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" href="index.css">
+  <style>
+    body {
+      background-color: #f5fff5;
+    }
+    .login-container {
+      max-width: 400px;
+      margin: 80px auto;
+      padding: 30px;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    .login-container h2 {
+      text-align: center;
+      margin-bottom: 30px;
+      color: #388e3c;
+    }
+    .btn-primary {
+      background-color: #388e3c;
+      border-color: #388e3c;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="logo">🛒 Grocery Express</div>
+    <div class="hamburger" onclick="toggleMenu()">☰</div>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="/">Home</a></li>
+      <li><a href="/categories">Products</a></li>
+      <li><a href="/cart">Cart</a></li>  
+      <li><a href="/contact" class="hover:text-green-600">Contact</a></li>
+      <li class="dropdown" id="account-dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Account <span class="caret"></span></a>
+        <ul class="dropdown-menu">
+          <li><a href="/login">Login</a></li>
+          <li><a href="/signup">Sign Up</a></li>
+        </ul>
+      </li>
+    </ul>
+    <div id="user-info" style="margin-right: 20px;"></div>
+  </nav>
+
+  <!-- Login Form -->
+  <div class="login-container">
+    <h2>Login</h2>
+    <form id="loginForm">
+      <div class="form-group">
+        <label for="email">Email:</label>
+        <input type="email" id="email" class="form-control" required />
+      </div>
+      <div class="form-group">
+        <label for="password">Password:</label>
+        <input type="password" id="password" class="form-control" required />
+      </div>
+      <button type="submit" class="btn btn-primary btn-block">Login</button>
+    </form>
+  </div>
+
+  <!-- Script -->
+  <script>
+    function toggleMenu() {
+      document.getElementById('navLinks').classList.toggle('show');
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      const userName = localStorage.getItem('userName');
+      const userInfo = document.getElementById('user-info');
+      const accountDropdown = document.getElementById('account-dropdown');
+
+      if (userName && userInfo) {
+        userInfo.innerHTML = `👤 Welcome, ${userName} <button onclick="logout()" class="btn btn-danger btn-xs">Logout</button>`;
+        if (accountDropdown) {
+          accountDropdown.style.display = 'none';
+        }
+      }
+    });
+
+    function logout() {
+      localStorage.removeItem('userName');
+      localStorage.removeItem('userEmail');
+      window.location.href = '/login';
+    }
+
+    document.getElementById('loginForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+
+      // Simple validation (you should replace this with real backend auth)
+      if (email && password) {
+        const userName = email.split('@')[0];
+        localStorage.setItem('userEmail', email);
+        localStorage.setItem('userName', userName);
+        alert("Login successful!");
+        window.location.href = '/';
+      } else {
+        alert("Invalid credentials.");
+      }
+    });
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Grocery Delivery | Auth</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="login.css">
+</head>
+<body class="bg-gradient-to-br from-green-100 via-lime-100 to-green-200">
+
+  <!-- Main container that holds the navbar and auth container -->
+  <div class="main-container">
+
+    <!-- Navbar -->
+    <nav class="navbar">
+      <div class="logo text-xl font-bold text-green-800">🛒 Grocery Express</div>
+      <ul class="nav-links">
+        <li><a href="/">Home</a></li>
+        <li><a href="/categories">Products</a></li>
+        <li><a href="/cart">Cart</a></li>
+        <li><a href="/login">Login</a></li>
+      </ul>
+    </nav>
+
+    <!-- Auth Section -->
+    <div class="auth-container">
+      <div class="w-full max-w-md bg-white shadow-xl rounded-2xl p-8">
+        <div class="flex justify-between mb-6">
+          <button id="loginBtn" class="w-1/2 text-center py-2 rounded-tl-2xl rounded-bl-2xl bg-green-600 text-white font-bold">Login</button>
+          <button id="signupBtn" class="w-1/2 text-center py-2 rounded-tr-2xl rounded-br-2xl bg-green-100 text-green-800 font-bold">Sign Up</button>
+        </div>
+
+        <!-- Login Form -->
+        <form id="loginForm" class="space-y-4">
+          <h2 class="text-xl font-bold text-gray-700 text-center">Welcome Back!</h2>
+          <input type="email" id="loginEmail" placeholder="Email" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400" required />
+          <input type="password" id="loginPassword" placeholder="Password" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400" required />
+          <button type="submit" class="w-full bg-green-600 text-white py-2 rounded-lg font-semibold hover:bg-green-700 transition">Login</button>
+          <p class="text-center text-sm text-gray-500 mt-2">Forgot password?</p>
+        </form>
+
+        <!-- Sign Up Form -->
+        <form id="signupForm" class="space-y-4 hidden">
+          <h2 class="text-xl font-bold text-gray-700 text-center">Create an Account</h2>
+          <input type="text" placeholder="Full Name" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400" />
+          <input type="email" placeholder="Email" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400" />
+          <input id="password" type="password" placeholder="Password" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400" />
+          <input id="confirmPassword" type="password" placeholder="Confirm Password" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-400" />
+          <p id="error" class="text-sm text-red-600 hidden text-center">Passwords do not match.</p>
+          <button type="submit" class="w-full bg-green-600 text-white py-2 rounded-lg font-semibold hover:bg-green-700 transition">Sign Up</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+    <script>
+      const loginBtn = document.getElementById("loginBtn");
+      const signupBtn = document.getElementById("signupBtn");
+      const loginForm = document.getElementById("loginForm");
+      const signupForm = document.getElementById("signupForm");
+      const errorMsg = document.getElementById("error");
+    
+      loginBtn.addEventListener("click", () => {
+        loginForm.classList.remove("hidden");
+        signupForm.classList.add("hidden");
+        loginBtn.classList.add("bg-green-600", "text-white");
+        signupBtn.classList.remove("bg-green-600", "text-white");
+        signupBtn.classList.add("bg-green-100", "text-green-800");
+      });
+    
+      signupBtn.addEventListener("click", () => {
+        signupForm.classList.remove("hidden");
+        loginForm.classList.add("hidden");
+        signupBtn.classList.add("bg-green-600", "text-white");
+        loginBtn.classList.remove("bg-green-600", "text-white");
+        loginBtn.classList.add("bg-green-100", "text-green-800");
+      });
+    
+      // Password match validation for signup
+      signupForm.addEventListener("submit", function (e) {
+        const password = document.getElementById("password").value;
+        const confirmPassword = document.getElementById("confirmPassword").value;
+    
+        if (password !== confirmPassword) {
+          e.preventDefault(); // prevent form from submitting
+          errorMsg.classList.remove("hidden");
+        } else {
+          errorMsg.classList.add("hidden");
+        }
+      });
+    
+      // Login form submission
+      loginForm.addEventListener("submit", async function (e) {
+        e.preventDefault(); // Prevent the default form submission
+    
+        const email = document.getElementById("loginEmail").value;
+        const password = document.getElementById("loginPassword").value;
+    
+        // Send login request to backend
+        try {
+          const response = await fetch("http://localhost:3000/login", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ email, password }),
+          });
+    
+          const data = await response.json();
+    
+          if (response.ok) {
+            // If login is successful, store the token and redirect the user
+            alert("Login successful!");
+            localStorage.setItem("authToken", data.token); // Store JWT token for later use
+            window.location.href = "/"; // Redirect to homepage (or dashboard)
+          } else {
+            // If there is an error, display the error message
+            alert(data.message); // Show the error message returned by the server
+          }
+        } catch (error) {
+          console.error("Error during login:", error);
+          alert("Something went wrong. Please try again.");
+        }
+      });
+    </script>
+  
+
+</body>
+</html>

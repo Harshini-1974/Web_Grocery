@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Grocery Express</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" href="index.css">
+</head>
+<body>
+  
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="logo">🛒 Grocery Express</div>
+    <div class="hamburger" onclick="toggleMenu()">☰</div>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="/">Home</a></li>
+      <li><a href="/categories">Products</a></li>
+      <li><a href="/cart">Cart</a></li>  
+      <li><a href="/contact" class="hover:text-green-600">Contact</a></li>
+      <li class="dropdown" id="account-dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Account <span class="caret"></span></a>
+        <ul class="dropdown-menu">
+          <li><a href="/login">Login</a></li>
+          <li><a href="/signup">Sign Up</a></li>
+        </ul>
+      </li>
+    </ul>
+    <div id="user-info" style="margin-right: 20px;"></div>
+  </nav>
+
+  <!-- Full-Width Carousel -->
+  <div class="carousel-full">
+    <div id="myCarousel" class="carousel slide" data-ride="carousel" data-interval="3000">
+      <ol class="carousel-indicators">
+        <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+        <li data-target="#myCarousel" data-slide-to="1"></li>
+        <li data-target="#myCarousel" data-slide-to="2"></li>
+      </ol>
+
+      <div class="carousel-inner">
+        <div class="item active">
+          <img src="https://st3.depositphotos.com/7341970/33687/v/1600/depositphotos_336878556-stock-illustration-grocery-shopping-promotional-sale-advertisement.jpg" alt="Slide 1">
+        </div>
+        <div class="item">
+          <img src="https://rukminim1.flixcart.com/flap/1080/480/image/b895094c851df56a.jpg?q=90" alt="Slide 2">
+        </div>
+        <div class="item">
+          <img src="https://images.cnbctv18.com/wp-content/uploads/2022/05/tata-consumer.jpg?impolicy=website&width=640&height=360" alt="Slide 3">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Hero Section -->
+  <header class="hero">
+    <h1>Welcome to Grocery Express</h1>
+    <p>Everything you need, delivered fresh to your doorstep.</p>
+    <a href="/categories.html" class="cta-button">Start Shopping</a>
+  </header>
+
+  <!-- Category Icons Section -->
+  <section class="category-icons">
+    <h2 style="text-align:center; color:#388e3c;">Shop by Category</h2>
+    <div class="product-grid">
+      <div class="product-card">
+        <img src="https://tse2.mm.bing.net/th?id=OIP.oaD0-pPtqK1Ue8Hvx_eCwwAAAA&w=474&h=474&c=7" alt="Dairy" />
+        <h3>Dairy</h3>
+      </div>
+      <div class="product-card">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcThGaOonEiaAe_gthSBWCK1qUC7-F7UH5t4xA&s" alt="Fruits" />
+        <h3>Fruits</h3>
+      </div>
+      <div class="product-card">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSeghUB2c9JpLlgFHa_zOkUdt-iT3XXQG6gxg&s" alt="Vegetables" />
+        <h3>Vegetables</h3>
+      </div>
+      <div class="product-card">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQGc_CyH8NAWfBLs0ekWiUNcatfDoNiE9QpZw&s" alt="Beverages" />
+        <h3>Beverages</h3>
+      </div>
+      <div class="product-card">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQkCjmpXXJlq148h-RBDR839GzsPQhGZEZTLw&s" alt="Chocolates" />
+        <h3>Chocolates</h3>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <p>&copy; 2025 Grocery Express. All rights reserved.</p>
+  </footer>
+
+  <!-- Script -->
+  <script>
+    function toggleMenu() {
+      document.getElementById('navLinks').classList.toggle('show');
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      const userName = localStorage.getItem('userName');
+      const userInfo = document.getElementById('user-info');
+      const accountDropdown = document.getElementById('account-dropdown');
+
+      if (userName && userInfo) {
+        userInfo.innerHTML = `👤 Welcome, ${userName} <button onclick="logout()" class="btn btn-danger btn-xs">Logout</button>`;
+        if (accountDropdown) {
+          accountDropdown.style.display = 'none';
+        }
+      }
+    });
+
+    function logout() {
+      localStorage.removeItem('userName');
+      localStorage.removeItem('userEmail');
+      window.location.href = '/login';
+    }
+  </script>
+
+</body>
+</html>

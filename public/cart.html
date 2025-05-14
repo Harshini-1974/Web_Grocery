@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Cart | Grocery Express</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-green-50 min-h-screen flex flex-col">
+
+  <!-- Navbar -->
+  <nav class="bg-green-200 p-4 shadow-md flex justify-between items-center flex-wrap">
+    <div class="text-xl font-bold text-green-900">🛒 Grocery Express</div>
+
+    <div class="flex items-center gap-6">
+      <!-- Navigation links -->
+      <ul class="flex flex-wrap gap-4 text-green-800 font-medium">
+        <li><a href="/" class="hover:text-green-600">Home</a></li>
+        <li><a href="/categories" class="hover:text-green-600">Products</a></li>
+        <li><a href="/cart" class="hover:text-green-600">Cart</a></li>
+        <li class="relative group">
+          <a href="#" class="hover:text-green-600">Account</a>
+          <li><a href="/contact" class="hover:text-green-600">Contact</a></li>
+          <div class="absolute hidden group-hover:block bg-white border border-gray-200 rounded-md shadow-lg mt-2 z-50 w-32">
+            <a href="/login" class="block px-4 py-2 hover:bg-green-100">Login</a>
+            <a href="/signup" class="block px-4 py-2 hover:bg-green-100">Sign Up</a>
+          </div>
+        </li>
+      </ul>
+
+      <!-- Logged-in user name and logout -->
+      <div id="user-info"></div>
+    </div>
+  </nav>
+
+  <!-- Cart Section -->
+  <main class="container mx-auto px-4 py-8 flex-grow">
+    <h2 class="text-3xl font-bold text-center mb-6 text-green-800">Your Cart</h2>
+
+    <!-- Cart Items -->
+    <div id="cartItems" class="space-y-4"></div>
+
+    <!-- Total Amount -->
+    <div id="totalAmount" class="text-right text-xl font-semibold text-green-800 my-4">Total: ₹0</div>
+
+    <!-- Checkout -->
+    <div class="mt-4">
+      <button id="checkoutBtn" class="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 rounded-lg transition">Proceed to Checkout</button>
+    </div>
+  </main>
+
+  <footer class="bg-green-200 text-center py-4 text-green-800 font-medium">
+    &copy; 2025 Grocery Express. All rights reserved.
+  </footer>
+
+  <script>
+    // Show user name and logout if logged in
+    window.onload = () => {
+      const userName = localStorage.getItem('userName');
+      const userEmail = localStorage.getItem('userEmail');
+      const userInfo = document.getElementById('user-info');
+      if (userName && userInfo) {
+        userInfo.innerHTML = `👤 Welcome, ${userName} <button onclick="logout()" style="color: red; margin-left: 10px; background: none; border: none; cursor: pointer;">Logout</button>`;
+      }
+    };
+
+    function logout() {
+      localStorage.removeItem('userName');
+      localStorage.removeItem('userEmail');
+      location.reload();
+    }
+
+    // Cart logic
+    let cartItems = JSON.parse(localStorage.getItem("cart")) || [];
+    const cartItemsContainer = document.getElementById("cartItems");
+    const totalAmountEl = document.getElementById("totalAmount");
+
+    function renderCart() {
+      cartItemsContainer.innerHTML = "";
+
+      if (cartItems.length === 0) {
+        cartItemsContainer.innerHTML = "<p class='text-center text-gray-600'>Your cart is empty.</p>";
+        totalAmountEl.textContent = "Total: ₹0";
+        return;
+      }
+
+      cartItems.forEach((item, index) => {
+        const itemElement = document.createElement("div");
+        itemElement.className = "bg-white p-4 rounded-lg shadow-md flex flex-col sm:flex-row justify-between items-start sm:items-center";
+
+        itemElement.innerHTML = `
+          <div>
+            <p class="text-lg font-semibold">${item.name}</p>
+            <p class="text-green-600 font-medium mt-1">${item.price}</p>
+            <div class="flex items-center gap-2 mt-2">
+              <button onclick="decreaseQuantity(${index})" class="px-2 bg-gray-200 hover:bg-gray-300 rounded">-</button>
+              <span class="font-medium">${item.quantity}</span>
+              <button onclick="increaseQuantity(${index})" class="px-2 bg-gray-200 hover:bg-gray-300 rounded">+</button>
+            </div>
+          </div>
+          <button onclick="removeFromCart(${index})" class="text-red-600 hover:underline mt-4 sm:mt-0">Remove</button>
+        `;
+
+        cartItemsContainer.appendChild(itemElement);
+      });
+
+      updateTotal();
+    }
+
+    function updateTotal() {
+      let total = 0;
+      cartItems.forEach(item => {
+        const price = parseFloat(item.price.replace(/[^\d.]/g, ""));
+        total += item.quantity * price;
+      });
+      totalAmountEl.textContent = `Total: ₹${total.toFixed(2)}`;
+    }
+
+    function increaseQuantity(index) {
+      cartItems[index].quantity += 1;
+      saveAndRender();
+    }
+
+    function decreaseQuantity(index) {
+      if (cartItems[index].quantity > 1) {
+        cartItems[index].quantity -= 1;
+      } else {
+        cartItems.splice(index, 1);
+      }
+      saveAndRender();
+    }
+
+    function removeFromCart(index) {
+      cartItems.splice(index, 1);
+      saveAndRender();
+    }
+
+    function saveAndRender() {
+      localStorage.setItem("cart", JSON.stringify(cartItems));
+      renderCart();
+    }
+
+    // Checkout Button - Modified to redirect to payment page
+    document.getElementById("checkoutBtn").addEventListener("click", () => {
+      const userEmail = localStorage.getItem("userEmail");
+
+      if (!userEmail) {
+        alert("Please login to proceed to checkout.");
+        window.location.href = "/login";
+        return;
+      }
+
+      if (cartItems.length === 0) {
+        alert("Your cart is empty. Please add products.");
+        return;
+      }
+
+      // Save cart to localStorage before redirecting
+      localStorage.setItem("checkoutCart", JSON.stringify(cartItems));
+      window.location.href = "/payment";
+    });
+
+    renderCart();
+  </script>
+</body>
+</html>

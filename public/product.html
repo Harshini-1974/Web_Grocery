@@ -1,0 +1,1360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grocery Shop</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background-color: #f9f9f9;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        header {
+            background-color: #fff;
+            padding: 10px 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            flex-wrap: wrap;
+        }
+
+        .menu-icon {
+            font-size: 24px;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .category-dropdown {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background-color: #fff;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+            min-width: 500px;
+            padding: 10px;
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 10px;
+            z-index: 200;
+        }
+
+        .category-dropdown .main-categories {
+            background-color: #333;
+            color: #fff;
+        }
+
+        .category-dropdown .main-categories ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .category-dropdown .main-categories li {
+            position: relative;
+            padding-left: 20px;
+        }
+
+        .category-dropdown .main-categories li::before {
+            content: ">";
+            position: absolute;
+            left: 5px;
+            color: #fff;
+            font-weight: bold;
+        }
+
+        .category-dropdown .main-categories a {
+            display: block;
+            padding: 8px 15px;
+            text-decoration: none;
+            color: #fff;
+            font-size: 14px;
+        }
+
+        .category-dropdown .main-categories a:hover {
+            background-color: #555;
+        }
+
+        .category-dropdown .subcategories {
+            display: grid;
+            grid-template-columns: 1fr;
+        }
+
+        .category-dropdown .subcategories div {
+            display: none;
+            margin-bottom: 10px;
+        }
+
+        .category-dropdown .subcategories div.active {
+            display: block;
+        }
+
+        .category-dropdown .subcategories h3 {
+            font-size: 16px;
+            padding: 8px 15px;
+            background-color: #f1f1f1;
+            color: #333;
+            margin: 0;
+        }
+
+        .category-dropdown .subcategories ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .category-dropdown .subcategories ul li a {
+            display: block;
+            padding: 8px 15px;
+            text-decoration: none;
+            color: #333;
+            background-color: #fff;
+            font-size: 14px;
+        }
+
+        .category-dropdown .subcategories ul li a:hover {
+            background-color: #ddd;
+        }
+
+        .search-bar {
+            flex-grow: 1;
+            position: relative;
+            margin: 0 10px;
+            transition: box-shadow 0.3s ease;
+        }
+
+        .search-bar.active {
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            outline: none;
+        }
+
+        .search-bar .fa-search {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #666;
+            cursor: pointer;
+        }
+
+        .cart-icon {
+            font-size: 24px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+
+        .cart-icon span {
+            margin-left: 5px;
+            font-size: 16px;
+        }
+
+        .product-section {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 0 20px;
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .product-item {
+            background: #fff;
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            display: none;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .product-item.category-view {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 10px;
+            text-align: left;
+        }
+
+        .product-item.category-view .product-image {
+            flex: 0 0 100px;
+            height: 100px;
+            overflow: hidden;
+            border-radius: 5px;
+        }
+
+        .product-item.category-view .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .product-item.category-view .product-details {
+            flex: 1;
+        }
+
+        .product-item.category-view .stock {
+            color: #27ae60;
+            font-size: 12px;
+            margin-bottom: 5px;
+        }
+
+        .product-item.category-view h3 {
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+
+        .product-item.category-view .price {
+            font-size: 16px;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .product-item.category-view .quantity {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-bottom: 10px;
+        }
+
+        .product-item.category-view .quantity button {
+            background: #fff;
+            border: 1px solid #ddd;
+            padding: 2px 8px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .product-item.category-view .quantity span {
+            font-size: 14px;
+        }
+
+        .product-item.category-view .add-to-cart {
+            background: #27ae60;
+            color: #fff;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            transition: background-color 0.3s ease;
+        }
+
+        .product-item.search-result {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 10px;
+            text-align: left;
+        }
+
+        .product-item.search-result .product-image {
+            flex: 0 0 100px;
+            height: 100px;
+            overflow: hidden;
+            border-radius: 5px;
+        }
+
+        .product-item.search-result .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .product-item.search-result .discount-badge {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background-color: #27ae60;
+            color: #fff;
+            padding: 5px 10px;
+            border-radius: 3px;
+            font-size: 12px;
+        }
+
+        .product-item.search-result .product-details {
+            flex: 1;
+        }
+
+        .product-item.search-result .stock {
+            color: #27ae60;
+            font-size: 12px;
+            margin-bottom: 5px;
+        }
+
+        .product-item.search-result h3 {
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+
+        .product-item.search-result .weight-select {
+            width: 100px;
+            padding: 5px;
+            margin-bottom: 5px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
+
+        .product-item.search-result .price {
+            font-size: 16px;
+            color: #2c3e50;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: baseline;
+            gap: 10px;
+        }
+
+        .product-item.search-result .original-price {
+            font-size: 12px;
+            color: #888;
+            text-decoration: line-through;
+        }
+
+        .product-item.search-result .quantity {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-bottom: 10px;
+        }
+
+        .product-item.search-result .quantity button {
+            background: #fff;
+            border: 1px solid #ddd;
+            padding: 2px 8px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .product-item.search-result .quantity span {
+            font-size: 14px;
+        }
+
+        .product-item.search-result .add-to-cart {
+            background: #27ae60;
+            color: #fff;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            transition: background-color 0.3s ease;
+        }
+
+        .product-item img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+
+        .product-details .stock {
+            color: #27ae60;
+            font-size: 12px;
+            margin-bottom: 5px;
+        }
+
+        .product-details h3 {
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+
+        .product-details .price {
+            font-size: 16px;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .quantity {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .quantity button {
+            background: #fff;
+            border: 1px solid #ddd;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+
+        .quantity span {
+            margin: 0 10px;
+            font-size: 16px;
+        }
+
+        .add-to-cart {
+            background: #27ae60;
+            color: #fff;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            transition: background-color 0.3s ease;
+        }
+
+        .add-to-cart.blink {
+            background-color: #d4e4d2;
+            animation: blink 1s ease-in-out;
+        }
+
+        .product-item:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .product-item.active {
+            display: block;
+        }
+
+        @keyframes blink {
+            0% { background-color: #d4e4d2; }
+            50% { background-color: #27ae60; }
+            100% { background-color: #27ae60; }
+        }
+
+        @media (max-width: 768px) {
+            .top-bar {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .search-bar, .cart-icon {
+                width: 100%;
+                margin: 10px 0;
+            }
+
+            .category-dropdown {
+                min-width: 100%;
+                grid-template-columns: 1fr;
+                position: fixed;
+                top: 60px;
+                left: 0;
+                right: 0;
+                max-height: 70vh;
+                overflow-y: auto;
+            }
+
+            .product-item.category-view,
+            .product-item.search-result {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .product-item.category-view .product-image,
+            .product-item.search-result .product-image {
+                margin: 0 auto;
+            }
+
+            .product-item.category-view .product-details,
+            .product-item.search-result .product-details {
+                text-align: center;
+            }
+
+            .product-item img {
+                height: 120px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .menu-icon {
+                font-size: 20px;
+            }
+
+            .search-bar input {
+                padding: 8px;
+            }
+
+            .cart-icon {
+                font-size: 20px;
+            }
+
+            .category-dropdown {
+                min-width: 100%;
+                padding: 5px;
+            }
+
+            .category-dropdown .main-categories a,
+            .category-dropdown .subcategories ul li a {
+                font-size: 12px;
+                padding: 6px 10px;
+            }
+
+            .product-item img {
+                height: 100px;
+            }
+
+            .product-details h3 {
+                font-size: 16px;
+            }
+
+            .product-details .price {
+                font-size: 14px;
+            }
+
+            .product-item.category-view .product-image,
+            .product-item.search-result .product-image {
+                width: 80px;
+                height: 80px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="top-bar">
+            <div class="menu-icon">
+                <i class="fas fa-bars"></i>
+                <div class="category-dropdown">
+                    <div class="main-categories">
+                        <ul>
+                            <li><a href="#" data-category="all">All Categories</a></li>
+                            <li><a href="#" data-category="fruititems">Fruit Items</a></li>
+                            <li><a href="#" data-category="vegetableitems">Vegetable Items</a></li>
+                            <li><a href="#" data-category="oilkitchenitems">Oil and Kitchen Items</a></li>
+                            <li><a href="#" data-category="dessertitems">Dessert Items</a></li>
+                            <li><a href="#" data-category="petfoodsitems">Pet Foods and Items</a></li>
+                            <li><a href="#" data-category="snacks">Snacks</a></li>
+                        </ul>
+                    </div>
+                    <div class="subcategories">
+                        <div data-category="fruititems">
+                            <h3>Fruit Items</h3>
+                            <ul>
+                                <li><a href="#" data-category="mango">Mango</a></li>
+                                <li><a href="#" data-category="grapes">Grapes</a></li>
+                                <li><a href="#" data-category="orange">Orange</a></li>
+                                <li><a href="#" data-category="apple">Apple</a></li>
+                                <li><a href="#" data-category="jackfruit">Jackfruit</a></li>
+                                <li><a href="#" data-category="pineapple">Pineapple</a></li>
+                            </ul>
+                        </div>
+                        <div data-category="vegetableitems">
+                            <h3>Vegetable Items</h3>
+                            <ul>
+                                <li><a href="#" data-category="ashgourd">Ash Gourd</a></li>
+                                <li><a href="#" data-category="broccoli">Broccoli</a></li>
+                                <li><a href="#" data-category="cucumber">Cucumber</a></li>
+                                <li><a href="#" data-category="potato">Potato</a></li>
+                                <li><a href="#" data-category="capsicum">Capsicum</a></li>
+                                <li><a href="#" data-category="clusterbeans">Cluster Beans</a></li>
+                                <li><a href="#" data-category="ginger">Ginger</a></li>
+                                <li><a href="#" data-category="onion">Onion</a></li>
+                            </ul>
+                        </div>
+                        <div data-category="oilkitchenitems">
+                            <h3>Oil and Kitchen Items</h3>
+                            <ul>
+                                <li><a href="#" data-category="bakeware">Bakeware</a></li>
+                                <li><a href="#" data-category="cookware">Cookware</a></li>
+                                <li><a href="#" data-category="fryingpan">Frying Pan</a></li>
+                                <li><a href="#" data-category="kadhaiwoks">Kadhai and Woks</a></li>
+                                <li><a href="#" data-category="instantpot">Instant Pot</a></li>
+                            </ul>
+                        </div>
+                        <div data-category="dessertitems">
+                            <h3>Dessert Items</h3>
+                            <ul>
+                                <li><a href="#" data-category="cakes">Cakes</a></li>
+                                <li><a href="#" data-category="cupcakes">Cupcakes</a></li>
+                                <li><a href="#" data-category="cookies">Cookies</a></li>
+                                <li><a href="#" data-category="candies">Candies</a></li>
+                                <li><a href="#" data-category="custards">Custards</a></li>
+                            </ul>
+                        </div>
+                        <div data-category="petfoodsitems">
+                            <h3>Pet Foods and Items</h3>
+                            <ul>
+                                <li><a href="#" data-category="pedigree">Pedigree</a></li>
+                                <li><a href="#" data-category="drools">Drools</a></li>
+                                <li><a href="#" data-category="royalcanin">Royal Canin</a></li>
+                                <li><a href="#" data-category="purinasupercoat">Purina Supercoat</a></li>
+                                <li><a href="#" data-category="meatup">Meat Up</a></li>
+                                <li><a href="#" data-category="hillsdiet">Hill’s Science Diet</a></li>
+                            </ul>
+                        </div>
+                        <div data-category="snacks">
+                            <h3>Snacks</h3>
+                            <ul>
+                                <li><a href="#" data-category="samosa">Samosa</a></li>
+                                <li><a href="#" data-category="vadapav">Vada Pav</a></li>
+                                <li><a href="#" data-category="meduvada">Medu Vada</a></li>
+                                <li><a href="#" data-category="popcorn">Popcorn</a></li>
+                                <li><a href="#" data-category="chips">Chips</a></li>
+                                <li><a href="#" data-category="trailmix">Trail Mix</a></li>
+                                <li><a href="#" data-category="fruitsnacks">Fruit Snacks</a></li>
+                                <li><a href="#" data-category="ricecakes">Rice Cakes</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="search-bar">
+                <input type="text" id="searchInput" placeholder="Search for products...">
+                <i class="fas fa-search"></i>
+            </div>
+            <div class="cart-icon">
+                <i class="fas fa-shopping-cart"></i>
+                <span>Cart</span>
+            </div>
+        </div>
+    </header>
+
+    <section class="product-section">
+        <div class="product-grid">
+            <!-- Fruit Items -->
+            <div class="product-item" data-category="mango">
+                <img src="D:\webpro\public\mango.jpg" alt="Mango">
+                <div class="product-details">
+                    <p class="stock">In Stock - 1 kg</p>
+                    <h3>Mango</h3>
+                    <p class="price">₹150</p>
+                    <div class="quantity">
+                        <button>-</button>
+                        <span>1</span>
+                        <button>+</button>
+                    </div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+            </div>
+            <div class="product-item" data-category="grapes">
+                <img src="D:\webpro\public\grapes(1).webp" alt="Grapes">
+                <div class="product-details">
+                    <p class="stock">In Stock - 1 kg</p>
+                    <h3>Grapes</h3>
+                    <p class="price">₹199</p>
+                    <div class="quantity">
+                        <button>-</button>
+                        <span>1</span>
+                        <button>+</button>
+                    </div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+            </div>
+            <div class="product-item" data-category="orange">
+                <img src="D:\webpro\public\orange.webp" alt="Orange">
+                <div class="product-details">
+                    <p class="stock">In Stock - 1 kg</p>
+                    <h3>Orange</h3>
+                    <p class="price">₹120</p>
+                    <div class="quantity">
+                        <button>-</button>
+                        <span>1</span>
+                        <button>+</button>
+                    </div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+            </div>
+            <div class="product-item" data-category="apple">
+                <img src="D:\webpro\public\apple.webp" alt="Apple">
+                <div class="product-details">
+                    <p class="stock">In Stock - 1 kg</p>
+                    <h3>Apple</h3>
+                    <p class="price">₹180</p>
+                    <div class="quantity">
+                        <button>-</button>
+                        <span>1</span>
+                        <button>+</button>
+                    </div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+            </div>
+            <div class="product-item" data-category="jackfruit">
+                <img src="D:\webpro\public\jackfruit.jpg" alt="Jackfruit">
+                <div class="product-details">
+                    <p class="stock">In Stock - 1 unit</p>
+                    <h3>Jackfruit</h3>
+                    <p class="price">₹300</p>
+                    <div class="quantity">
+                        <button>-</button>
+                        <span>1</span>
+                        <button>+</button>
+                    </div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+            </div>
+            <div class="product-item" data-category="pineapple">
+                <img src="D:\webpro\public\pineapple(1).webp" alt="Pineapple">
+                <div class="product-details">
+                    <p class="stock">In Stock - 1 unit</p>
+                    <h3>Pineapple</h3>
+                    <p class="price">₹100</p>
+                    <div class="quantity">
+                        <button>-</button>
+                        <span>1</span>
+                        <button>+</button>
+                    </div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+            </div>
+
+            <!-- Vegetable Items -->
+            <div class="product-item" data-category="ashgourd">
+                <img src="D:\webpro\public\AshGourd.jpg" alt="Ash Gourd">
+                <div class="product-details">
+                    <p class="stock">In Stock - 1 kg</p>
+                    <h3>Ash Gourd</h3>
+                    <p class="price">₹40</p>
+                    <div class="quantity">
+                        <button>-</button>
+                        <span>1</span>
+                        <button>+</button>
+                    </div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+            </div>
+            <div class="product-item" data-category="broccoli">
+                <img src="D:\webpro\public\Broccoli.jpg" alt="Broccoli">
+                <div class="product-details">
+                    <p class="stock">In Stock - 500g</p>
+                    <h3>Broccoli</h3>
+                    <p class="price">₹80</p>
+                    <div class="quantity">
+                        <button>-</button>
+                        <span>1</span>
+                        <button>+</button>
+                    </div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+            </div>
+            <div class="product-item" data-category="cucumber">
+                <img src="D:\webpro\public\Cucumber.webp" alt="Cucumber">
+                <div class="product-details">
+                    <p class="stock">In Stock - 1 kg</p>
+                    <h3>Cucumber</h3>
+                    <p class="price">₹30</p>
+                    <div class="quantity">
+                        <button>-</button>
+                        <span>1</span>
+                        <button>+</button>
+                    </div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+            </div>
+            <div class="product-item" data-category="potato">
+                <img src="D:\webpro\public\Potato.webp" alt="Potato">
+                <div class="product-details">
+                    <p class="stock">In Stock - 1 kg</p>
+                    <h3>Potato</h3>
+                    <p class="price">₹50</p>
+                    <div class="quantity">
+                        <button>-</button>
+                        <span>1</span>
+                        <button>+</button>
+                    </div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+            </div>
+            <div class="product-item" data-category="capsicum">
+                <img src="D:\webpro\public\Capsicum.jpg" alt="Capsicum">
+                <div class="product-details">
+                    <p class="stock">In Stock - 500g</p>
+                    <h3>Capsicum</h3>
+                    <p class="price">₹70</p>
+                    <div class="quantity">
+                        <button>-</button>
+                        <span>1</span>
+                        <button>+</button>
+                    </div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+            </div>
+            <div class="product-item" data-category="clusterbeans">
+                <img src="D:\webpro\public\Cluster Beans.jpeg" alt="Cluster Beans">
+                <div class="product-details">
+                    <p class="stock">In Stock - 500g</p>
+                    <h3>Cluster Beans</h3>
+                    <p class="price">₹60</p>
+                    <div class="quantity">
+                        <button>-</button>
+                        <span>1</span>
+                        <button>+</button>
+                    </div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+            </div>
+            <div class="product-item" data-category="ginger">
+                <img src="D:\webpro\public\ginger.jpeg" alt="Ginger">
+                <div class="product-details">
+                    <p class="stock">In Stock - 250g</p>
+                    <h3>Ginger</h3>
+                    <p class="price">₹30</p>
+                    <div class="quantity">
+                        <button>-</button>
+                        <span>1</span>
+                        <button>+</button>
+                    </div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+            </div>
+            <div class="product-item" data-category="onion">
+                <img src="D:\webpro\public\onion.jpeg" alt="Onion">
+                <div class="product-details">
+                    <p class="stock">In Stock - 1 kg</p>
+                    <h3>Onion</h3>
+                    <p class="price">₹40</p>
+                    <div class="quantity">
+                        <button>-</button>
+                        <span>1</span>
+                        <button>+</button>
+                    </div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+            </div>
+
+            <!-- Oil and Kitchen Items -->
+            <div class="product-item" data-category="bakeware">
+                <img src="D:\webpro\public\Bakeware.jpeg" alt="Bakeware">
+                <div class="product-details">
+                    <p class="stock">In Stock - 1 set</p>
+                    <h3>Bakeware</h3>
+                    <p class="price">₹800</p>
+                    <div class="quantity">
+                        <button>-</button>
+                        <span>1</span>
+                        <button>+</button>
+                    </div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+            </div>
+            <div class="product-item" data-category="cookware">
+                <img src="D:\webpro\public\Cookware.avif" alt="Cookware">
+                <div class="product-details">
+                    <p class="stock">In Stock - 1 unit</p>
+                    <h3>Cookware</h3>
+                    <p class="price">₹1000</p>
+                    <div class="quantity">
+                        <button>-</button>
+                        <span>1</span>
+                        <button>+</button>
+                    </div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+            </div>
+            <div class="product-item" data-category="fryingpan">
+                <img src="D:\webpro\public\fryingpan.jpeg" alt="Frying Pan">
+                <div class="product-details">
+                    <p class="stock">In Stock - 1 unit</p>
+                    <h3>Frying Pan</h3>
+                    <p class="price">₹500</p>
+                    <div class="quantity">
+                        <button>-</button>
+                        <span>1</span>
+                        <button>+</button>
+                    </div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+            </div>
+            <div class="product-item" data-category="kadhaiwoks">
+                <img src="D:\webpro\public\Kadhai and Woks.jpg" alt="Kadhai and Woks">
+                <div class="product-details">
+                    <p class="stock">In Stock - 1 unit</p>
+                    <h3>Kadhai and Woks</h3>
+                    <p class="price">₹700</p>
+                    <div class="quantity">
+                        <button>-</button>
+                        <span>1</span>
+                        <button>+</button>
+                    </div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+            </div>
+            <div class="product-item" data-category="instantpot">
+                <img src="D:\webpro\public\Instant Pot.jpeg" alt="Instant Pot">
+                <div class="product-details">
+                    <p class="stock">In Stock - 1 unit</p>
+                    <h3>Instant Pot</h3>
+                    <p class="price">₹6000</p>
+                    <div class="quantity">
+                        <button>-</button>
+                        <span>1</span>
+                        <button>+</button>
+                    </div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+            </div>
+
+            <!-- Dessert Items -->
+            <div class="product-item" data-category="cakes">
+                <img src=D:\webpro\public\cakes.jpeg" alt="Cakes">
+                <div class="product-details">
+                    <p class="stock">In Stock - 1 kg</p>
+                    <h3>Cakes</h3>
+                    <p class="price">₹300</p>
+                    <div class="quantity">
+                        <button>-</button>
+                        <span>1</span>
+                        <button>+</button>
+                    </div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+            </div>
+            <div class="product-item" data-category="cupcakes">
+                <img src="D:\webpro\public\cupcakes.webp" alt="Cupcakes">
+                <div class="product-details">
+                    <p class="stock">In Stock - 6 pcs</p>
+                    <h3>Cupcakes</h3>
+                    <p class="price">₹150</p>
+                    <div class="quantity">
+                        <button>-</button>
+                        <span>1</span>
+                        <button>+</button>
+                    </div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+            </div>
+            <div class="product-item" data-category="cookies">
+                <img src="D:\webpro\public\Cookies.jpeg" alt="Cookies">
+                <div class="product-details">
+                    <p class="stock">In Stock - 500g</p>
+                    <h3>Cookies</h3>
+                    <p class="price">₹150</p>
+                    <div class="quantity">
+                        <button>-</button>
+                        <span>1</span>
+                        <button>+</button>
+                    </div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+            </div>
+            <div class="product-item" data-category="candies">
+                <img src="D:\webpro\public\Candies.jpg" alt="Candies">
+                <div class="product-details">
+                    <p class="stock">In Stock - 200g</p>
+                    <h3>Candies</h3>
+                    <p class="price">₹100</p>
+                    <div class="quantity">
+                        <button>-</button>
+                        <span>1</span>
+                        <button>+</button>
+                    </div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+            </div>
+            <div class="product-item" data-category="custards">
+                <img src="D:\webpro\public\Custards.jpeg" alt="Custards">
+                <div class="product-details">
+                    <p class="stock">In Stock - 500g</p>
+                    <h3>Custards</h3>
+                    <p class="price">₹120</p>
+                    <div class="quantity">
+                        <button>-</button>
+                        <span>1</span>
+                        <button>+</button>
+                    </div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+            </div>
+
+            <!-- Pet Foods and Items -->
+            <div class="product-item" data-category="pedigree">
+                <img src="D:\webpro\public\Pedigree.jpg" alt="Pedigree">
+                <div class="product-details">
+                    <p class="stock">In Stock - 1 kg</p>
+                    <h3>Pedigree</h3>
+                    <p class="price">₹500</p>
+                    <div class="quantity">
+                        <button>-</button>
+                        <span>1</span>
+                        <button>+</button>
+                    </div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+            </div>
+            <div class="product-item" data-category="drools">
+                <img src="D:\webpro\public\Drools.jpg" alt="Drools">
+                <div class="product-details">
+                    <p class="stock">In Stock - 1 kg</p>
+                    <h3>Drools</h3>
+                    <p class="price">₹450</p>
+                    <div class="quantity">
+                        <button>-</button>
+                        <span>1</span>
+                        <button>+</button>
+                    </div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+            </div>
+            <div class="product-item" data-category="royalcanin">
+                <img src="D:\webpro\public\Royal Canin.jpg" alt="Royal Canin">
+                <div class="product-details">
+                    <p class="stock">In Stock - 1 kg</p>
+                    <h3>Royal Canin</h3>
+                    <p class="price">₹600</p>
+                    <div class="quantity">
+                        <button>-</button>
+                        <span>1</span>
+                        <button>+</button>
+                    </div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+            </div>
+            <div class="product-item" data-category="purinasupercoat">
+                <img src="D:\webpro\public\Purina Supercoat.jpg" alt="Purina Supercoat">
+                <div class="product-details">
+                    <p class="stock">In Stock - 1 kg</p>
+                    <h3>Purina Supercoat</h3>
+                    <p class="price">₹550</p>
+                    <div class="quantity">
+                        <button>-</button>
+                        <span>1</span>
+                        <button>+</button>
+                    </div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+            </div>
+            <div class="product-item" data-category="meatup">
+                <img src="D:\webpro\public\meatup.jpeg" alt="Meat Up">
+                <div class="product-details">
+                    <p class="stock">In Stock - 1 kg</p>
+                    <h3>Meat Up</h3>
+                    <p class="price">₹480</p>
+                    <div class="quantity">
+                        <button>-</button>
+                        <span>1</span>
+                        <button>+</button>
+                    </div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+            </div>
+            <div class="product-item" data-category="hillsdiet">
+                <img src="D:\webpro\public\Hill’s Science Diet.jpeg" alt="Hill’s Science Diet">
+                <div class="product-details">
+                    <p class="stock">In Stock - 1 kg</p>
+                    <h3>Hill’s Science Diet</h3>
+                    <p class="price">₹700</p>
+                    <div class="quantity">
+                        <button>-</button>
+                        <span>1</span>
+                        <button>+</button>
+                    </div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+            </div>
+
+            <!-- Snacks -->
+            <div class="product-item" data-category="samosa">
+                <img src="D:\webpro\public\samosa.webp" alt="Samosa">
+                <div class="product-details">
+                    <p class="stock">In Stock - 4 pcs</p>
+                    <h3>Samosa</h3>
+                    <p class="price">₹50</p>
+                    <div class="quantity">
+                        <button>-</button>
+                        <span>1</span>
+                        <button>+</button>
+                    </div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+            </div>
+            <div class="product-item" data-category="vadapav">
+                <img src="D:\webpro\public\Vada Pav.jpeg" alt="Vada Pav">
+                <div class="product-details">
+                    <p class="stock">In Stock - 1 pc</p>
+                    <h3>Vada Pav</h3>
+                    <p class="price">₹20</p>
+                    <div class="quantity">
+                        <button>-</button>
+                        <span>1</span>
+                        <button>+</button>
+                    </div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+            </div>
+            <div class="product-item" data-category="meduvada">
+                <img src="D:\webpro\public\Medu Vada.jpeg" alt="Medu Vada">
+                <div class="product-details">
+                    <p class="stock">In Stock - 2 pcs</p>
+                    <h3>Medu Vada</h3>
+                    <p class="price">₹30</p>
+                    <div class="quantity">
+                        <button>-</button>
+                        <span>1</span>
+                        <button>+</button>
+                    </div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+            </div>
+            <div class="product-item" data-category="popcorn">
+                <img src="D:\webpro\public\popcorn.jpg" alt="Popcorn">
+                <div class="product-details">
+                    <p class="stock">In Stock - 100g</p>
+                    <h3>Popcorn</h3>
+                    <p class="price">₹50</p>
+                    <div class="quantity">
+                        <button>-</button>
+                        <span>1</span>
+                        <button>+</button>
+                    </div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+            </div>
+            <div class="product-item" data-category="chips">
+                <img src="D:\webpro\public\chips.jpeg" alt="Chips">
+                <div class="product-details">
+                    <p class="stock">In Stock - 150g</p>
+                    <h3>Chips</h3>
+                    <p class="price">₹40</p>
+                    <div class="quantity">
+                        <button>-</button>
+                        <span>1</span>
+                        <button>+</button>
+                    </div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+            </div>
+            <div class="product-item" data-category="trailmix">
+                <img src="D:\webpro\public\Trail Mix.jpeg" alt="Trail Mix">
+                <div class="product-details">
+                    <p class="stock">In Stock - 200g</p>
+                    <h3>Trail Mix</h3>
+                    <p class="price">₹120</p>
+                    <div class="quantity">
+                        <button>-</button>
+                        <span>1</span>
+                        <button>+</button>
+                    </div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+            </div>
+            <div class="product-item" data-category="fruitsnacks">
+                <img src="D:\webpro\public\Fruit Snacks.jpeg" alt="Fruit Snacks">
+                <div class="product-details">
+                    <p class="stock">In Stock - 100g</p>
+                    <h3>Fruit Snacks</h3>
+                    <p class="price">₹80</p>
+                    <div class="quantity">
+                        <button>-</button>
+                        <span>1</span>
+                        <button>+</button>
+                    </div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+            </div>
+            <div class="product-item" data-category="ricecakes">
+                <img src="D:\webpro\public\ricecake.webp" alt="Rice Cakes">
+                <div class="product-details">
+                    <p class="stock">In Stock - 150g</p>
+                    <h3>Rice Cakes</h3>
+                    <p class="price">₹90</p>
+                    <div class="quantity">
+                        <button>-</button>
+                        <span>1</span>
+                        <button>+</button>
+                    </div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Quantity adjustment
+        document.querySelectorAll('.quantity button').forEach(button => {
+            button.addEventListener('click', () => {
+                const quantity = button.parentElement.querySelector('span');
+                let value = parseInt(quantity.textContent);
+                if (button.textContent === '-') {
+                    value = value > 1 ? value - 1 : 1;
+                } else {
+                    value += 1;
+                }
+                quantity.textContent = value;
+            });
+        });
+
+        // Category filter and toggle dropdown on click
+        const menuIcon = document.querySelector('.menu-icon');
+        const categoryDropdown = document.querySelector('.category-dropdown');
+        const mainCategoryLinks = document.querySelectorAll('.main-categories a');
+        const subCategoryLinks = document.querySelectorAll('.subcategories a');
+        const subCategories = document.querySelectorAll('.subcategories div');
+        const productItems = document.querySelectorAll('.product-item');
+
+        let currentCategory = 'all';
+
+        // Show all products by default on page load
+        window.addEventListener('load', () => {
+            productItems.forEach(item => item.classList.add('active'));
+            categoryDropdown.style.display = 'none';
+        });
+
+        // Toggle dropdown on menu icon click
+        menuIcon.addEventListener('click', (e) => {
+            e.stopPropagation();
+            categoryDropdown.style.display = categoryDropdown.style.display === 'grid' ? 'none' : 'grid';
+        });
+
+        // Handle main category click
+        mainCategoryLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const category = link.getAttribute('data-category');
+
+                subCategories.forEach(sub => sub.classList.remove('active'));
+                const correspondingSub = document.querySelector(`.subcategories div[data-category="${category}"]`);
+                if (correspondingSub) {
+                    correspondingSub.classList.add('active');
+                }
+
+                currentCategory = category;
+                productItems.forEach(item => {
+                    item.classList.remove('active', 'category-view', 'search-result');
+                    const itemCategory = item.getAttribute('data-category');
+                    if (category === 'all') {
+                        item.classList.add('active');
+                    } else if (category === 'fruititems') {
+                        const fruitCategories = ['mango', 'grapes', 'orange', 'apple', 'jackfruit', 'pineapple'];
+                        if (fruitCategories.includes(itemCategory)) {
+                            item.classList.add('active', 'category-view');
+                        }
+                    } else if (category === 'vegetableitems') {
+                        const vegCategories = ['ashgourd', 'broccoli', 'cucumber', 'potato', 'capsicum', 'clusterbeans', 'ginger', 'onion'];
+                        if (vegCategories.includes(itemCategory)) {
+                            item.classList.add('active', 'category-view');
+                        }
+                    } else if (category === 'oilkitchenitems') {
+                        const kitchenCategories = ['bakeware', 'cookware', 'fryingpan', 'kadhaiwoks', 'instantpot'];
+                        if (kitchenCategories.includes(itemCategory)) {
+                            item.classList.add('active', 'category-view');
+                        }
+                    } else if (category === 'dessertitems') {
+                        const dessertCategories = ['cakes', 'cupcakes', 'cookies', 'candies', 'custards'];
+                        if (dessertCategories.includes(itemCategory)) {
+                            item.classList.add('active', 'category-view');
+                        }
+                    } else if (category === 'petfoodsitems') {
+                        const petCategories = ['pedigree', 'drools', 'royalcanin', 'purinasupercoat', 'meatup', 'hillsdiet'];
+                        if (petCategories.includes(itemCategory)) {
+                            item.classList.add('active', 'category-view');
+                        }
+                    } else if (category === 'snacks') {
+                        const snackCategories = ['samosa', 'vadapav', 'meduvada', 'popcorn', 'chips', 'trailmix', 'fruitsnacks', 'ricecakes'];
+                        if (snackCategories.includes(itemCategory)) {
+                            item.classList.add('active', 'category-view');
+                        }
+                    }
+                });
+                categoryDropdown.style.display = 'none';
+            });
+        });
+
+        // Handle subcategory click
+        subCategoryLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const category = link.getAttribute('data-category');
+
+                currentCategory = category;
+                productItems.forEach(item => {
+                    item.classList.remove('active', 'category-view', 'search-result');
+                    if (item.getAttribute('data-category') === category) {
+                        item.classList.add('active', 'category-view');
+                    }
+                });
+                categoryDropdown.style.display = 'none';
+            });
+        });
+
+        // Close dropdown if clicked outside
+        document.addEventListener('click', (e) => {
+            if (!menuIcon.contains(e.target) && !categoryDropdown.contains(e.target)) {
+                categoryDropdown.style.display = 'none';
+            }
+        });
+
+        // Search functionality with new pattern
+        const searchInput = document.getElementById('searchInput');
+        const searchBar = document.querySelector('.search-bar');
+
+        searchInput.addEventListener('click', () => {
+            searchBar.classList.add('active');
+            setTimeout(() => {
+                searchBar.classList.remove('active');
+            }, 1000);
+        });
+
+        searchInput.addEventListener('input', () => {
+            const searchTerm = searchInput.value.toLowerCase().trim();
+            productItems.forEach(item => {
+                const productName = item.querySelector('h3').textContent.toLowerCase();
+                item.classList.remove('active', 'category-view', 'search-result');
+                if (searchTerm === '' || productName.includes(searchTerm)) {
+                    item.classList.add('active');
+                    if (searchTerm !== '') {
+                        item.classList.add('search-result');
+                        // Add discount and weight for search results
+                        const details = item.querySelector('.product-details');
+                        if (!details.querySelector('.discount-badge')) {
+                            const badge = document.createElement('div');
+                            badge.className = 'discount-badge';
+                            badge.textContent = '20% OFF'; // Example discount
+                            item.querySelector('.product-image').appendChild(badge);
+                        }
+                        if (!details.querySelector('.weight-select')) {
+                            const select = document.createElement('select');
+                            select.className = 'weight-select';
+                            select.innerHTML = '<option value="1kg">1 kg</option><option value="500g">500g</option>';
+                            details.insertBefore(select, details.querySelector('.price'));
+                        }
+                        if (!details.querySelector('.original-price')) {
+                            const price = details.querySelector('.price');
+                            const originalPrice = document.createElement('span');
+                            originalPrice.className = 'original-price';
+                            originalPrice.textContent = `₹${parseInt(price.textContent.replace('₹', '')) * 1.25}`; // 25% higher original price
+                            price.appendChild(originalPrice);
+                        }
+                    }
+                } else {
+                    // Remove search-specific elements when not matching
+                    const badge = item.querySelector('.discount-badge');
+                    const select = item.querySelector('.weight-select');
+                    const originalPrice = item.querySelector('.original-price');
+                    if (badge) badge.remove();
+                    if (select) select.remove();
+                    if (originalPrice) originalPrice.remove();
+                }
+            });
+        });
+
+        // Add to Cart blink effect
+        document.querySelectorAll('.add-to-cart').forEach(button => {
+            button.addEventListener('click', () => {
+                button.classList.add('blink');
+                setTimeout(() => {
+                    button.classList.remove('blink');
+                }, 1000);
+            });
+        });
+    </script>
+</body>
+</html>

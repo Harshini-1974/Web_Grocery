@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Payment | Grocery Express</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-green-50 min-h-screen flex flex-col">
+  <!-- Navbar -->
+  <nav class="bg-green-200 p-4 shadow-md flex justify-between items-center flex-wrap">
+    <div class="text-xl font-bold text-green-900">🛒 Grocery Express</div>
+    <div class="flex items-center gap-6">
+      <ul class="flex flex-wrap gap-4 text-green-800 font-medium">
+        <li><a href="/" class="hover:text-green-600">Home</a></li>
+        <li><a href="/categories" class="hover:text-green-600">Products</a></li>
+        <li><a href="/cart" class="hover:text-green-600">Cart</a></li>
+        <li class="relative group">
+          <a href="#" class="hover:text-green-600">Account</a>
+          <div class="absolute hidden group-hover:block bg-white border border-gray-200 rounded-md shadow-lg mt-2 z-50 w-32">
+            <a href="/login" class="block px-4 py-2 hover:bg-green-100">Login</a>
+            <a href="/signup" class="block px-4 py-2 hover:bg-green-100">Sign Up</a>
+          </div>
+        </li>
+      </ul>
+      <div id="user-info"></div>
+    </div>
+  </nav>
+
+  <!-- Payment Section -->
+  <main class="container mx-auto px-4 py-8 flex-grow">
+    <h2 class="text-3xl font-bold text-center mb-6 text-green-800">Payment</h2>
+    
+    <div class="max-w-md mx-auto bg-white p-6 rounded-lg shadow-md">
+      <!-- Order Summary -->
+      <div id="orderSummary" class="mb-6 p-4 bg-green-100 rounded-lg"></div>
+      
+      <!-- Payment Form -->
+      <form id="paymentForm" class="space-y-4">
+        <div>
+          <label class="block text-green-800 font-medium mb-2">Card Number</label>
+          <input type="text" class="w-full p-2 border border-green-300 rounded-md" placeholder="1234 5678 9012 3456" required>
+        </div>
+        
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-green-800 font-medium mb-2">Expiry Date</label>
+            <input type="text" class="w-full p-2 border border-green-300 rounded-md" placeholder="MM/YY" required>
+          </div>
+          <div>
+            <label class="block text-green-800 font-medium mb-2">CVV</label>
+            <input type="text" class="w-full p-2 border border-green-300 rounded-md" placeholder="123" required>
+          </div>
+        </div>
+        
+        <div>
+          <label class="block text-green-800 font-medium mb-2">Name on Card</label>
+          <input type="text" class="w-full p-2 border border-green-300 rounded-md" placeholder="John Doe" required>
+        </div>
+        
+        <button type="submit" class="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 rounded-lg transition">
+          Pay Now
+        </button>
+      </form>
+    </div>
+  </main>
+
+  <footer class="bg-green-200 text-center py-4 text-green-800 font-medium">
+    &copy; 2025 Grocery Express. All rights reserved.
+  </footer>
+
+  <script>
+    // Show user name and logout if logged in
+    window.onload = () => {
+      const userName = localStorage.getItem('userName');
+      const userInfo = document.getElementById('user-info');
+      if (userName && userInfo) {
+        userInfo.innerHTML = `👤 Welcome, ${userName} <button onclick="logout()" style="color: red; margin-left: 10px; background: none; border: none; cursor: pointer;">Logout</button>`;
+      }
+      
+      // Display order summary
+      const cartItems = JSON.parse(localStorage.getItem('checkoutCart')) || [];
+      const orderSummary = document.getElementById('orderSummary');
+      
+      if (cartItems.length === 0) {
+        orderSummary.innerHTML = '<p class="text-center">No items in cart</p>';
+        return;
+      }
+      
+      let html = '<h3 class="font-bold text-lg mb-2">Order Summary</h3>';
+      let total = 0;
+      
+      cartItems.forEach(item => {
+        const price = parseFloat(item.price.replace(/[^\d.]/g, ""));
+        total += item.quantity * price;
+        html += `
+          <div class="flex justify-between py-2 border-b">
+            <span>${item.name} (${item.quantity})</span>
+            <span>₹${(item.quantity * price).toFixed(2)}</span>
+          </div>
+        `;
+      });
+      
+      html += `
+        <div class="flex justify-between font-bold mt-4 pt-2 border-t">
+          <span>Total</span>
+          <span>₹${total.toFixed(2)}</span>
+        </div>
+      `;
+      
+      orderSummary.innerHTML = html;
+    };
+
+    function logout() {
+      localStorage.removeItem('userName');
+      localStorage.removeItem('userEmail');
+      window.location.href = '/';
+    }
+
+    // Handle payment form submission
+    document.getElementById('paymentForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const userEmail = localStorage.getItem('userEmail');
+      const cartItems = JSON.parse(localStorage.getItem('checkoutCart')) || [];
+      
+      if (!userEmail) {
+        alert('Please login to complete payment.');
+        window.location.href = '/login';
+        return;
+      }
+      
+      if (cartItems.length === 0) {
+        alert('Your cart is empty.');
+        window.location.href = '/categories';
+        return;
+      }
+      
+      try {
+        const response = await fetch('http://localhost:3001/checkout', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            user: userEmail,
+            cart: cartItems
+          })
+        });
+
+        const data = await response.json();
+        if (response.ok) {
+          alert('Payment successful! Your order has been placed.');
+          localStorage.removeItem('cart');
+          localStorage.removeItem('checkoutCart');
+          window.location.href = '/';
+        } else {
+          alert(data.message || 'Payment failed. Please try again.');
+        }
+      } catch (err) {
+        console.error('Payment error:', err);
+        alert('Error during payment processing.');
+      }
+    });
+  </script>
+</body>
+</html>

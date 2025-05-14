@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grocery Shop</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="categories.css">
+
+    
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">🛒 Grocery Express</div>
+        <ul class="nav-links">
+          <li><a href="/">Home</a></li>
+          <li><a href="/categories">Products</a></li>
+          <li><a href="/cart">Cart</a></li>
+          <li><a href="/contact" class="hover:text-green-600">Contact</a></li>
+          <li>
+            <a href="#">Account</a>
+            <div class="dropdown-content">
+              <a href="/login">Login</a>
+              <a href="/signup">Sign Up</a>
+            </div>
+          </li>
+          <li id="user-info" style="float: right;"></li>
+        </ul>
+      </nav>
+    <header>
+        <div class="top-bar">
+            <div class="menu-icon">
+                <i class="fas fa-bars"></i>
+                <div class="category-dropdown">
+                    <div class="main-categories">
+                        <ul>
+                            <li><a href="#" data-category="all">All Categories</a></li>
+                            <li><a href="#" data-category="fruititems">Fruit Items</a></li>
+                            <li><a href="#" data-category="vegetableitems">Vegetable Items</a></li>
+                            <li><a href="#" data-category="oilkitchenitems">Oil and Kitchen Items</a></li>
+                            <li><a href="#" data-category="dessertitems">Dessert Items</a></li>
+                            <li><a href="#" data-category="petfoodsitems">Pet Foods and Items</a></li>
+                            <li><a href="#" data-category="snacks">Snacks</a></li>
+                        </ul>
+                    </div>
+                    
+                </div>
+            </div>
+            <div class="search-bar">
+                <input type="text" id="searchInput" placeholder="Search for products...">
+                <i class="fas fa-search"></i>
+            </div>
+           <!-- <div class="cart-icon">
+                <i class="fas fa-shopping-cart"></i>
+                <span>Cart</span>
+            </div>-->
+        </div>
+    </header>
+
+    <section class="product-section">
+        <div class="product-grid">
+            <!-- Fruit Items -->
+            <div class="product-item" data-category="mango">
+                <img src="images\mango.jpg" alt="Mango">
+                <div class="product-details">
+                    <p class="stock">In Stock - 1 kg</p>
+                    <h3>Mango</h3>
+                    <p class="price">₹150</p>
+                    <div class="quantity">
+                        <button>-</button>
+                        <span>1</span>
+                        <button>+</button>
+                    </div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+            </div>
+            <div class="product-item" data-category="grapes">
+                <img src="images\grapes(1).webp" alt="Grapes">
+                <div class="product-details">
+                    <p class="stock">In Stock - 1 kg</p>
+                    <h3>Grapes</h3>
+                    <p class="price">₹199</p>
+                    <div class="quantity">
+                        <button>-</button>
+                        <span>1</span>
+                        <button>+</button>
+                    </div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+            </div>
+            <div class="product-item" data-category="orange">
+                <img src="images\orange.webp" alt="Orange">
+                <div class="product-details">
+                    <p class="stock">In Stock - 1 kg</p>
+                    <h3>Orange</h3>
+                    <p class="price">₹120</p>
+                    <div class="quantity">
+                        <button>-</button>
+                        <span>1</span>
+                        <button>+</button>
+                    </div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+            </div>
+            <div class="product-item" data-category="apple">
+                <img src="images\apple.webp" alt="Apple">
+                <div class="product-details">
+                    <p class="stock">In Stock - 1 kg</p>
+                    <h3>Apple</h3>
+                    <p class="price">₹180</p>
+                    <div class="quantity">
+                        <button>-</button>
+                        <span>1</span>
+                        <button>+</button>
+                    </div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+            </div>
+            <div class="product-item" data-category="jackfruit">
+                <img src="images\jackfruit.jpg" alt="Jackfruit">
+                <div class="product-details">
+                    <p class="stock">In Stock - 1 unit</p>
+                    <h3>Jackfruit</h3>
+                    <p class="price">₹300</p>
+                    <div class="quantity">
+                        <button>-</button>
+                        <span>1</span>
+                        <button>+</button>
+                    </div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+            </div>
+            <div class="product-item" data-category="pineapple">
+                <img src="images\pineapple(1).webp" alt="Pineapple">
+                <div class="product-details">
+                    <p class="stock">In Stock - 1 unit</p>
+                    <h3>Pineapple</h3>
+                    <p class="price">₹100</p>
+                    <div class="quantity">
+                        <button>-</button>
+                        <span>1</span>
+                        <button>+</button>
+                    </div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+            </div>
+
+            <!-- Vegetable Items -->
+            <div class="product-item" data-category="ashgourd">
+                <img src="images\AshGourd.jpg" alt="Ash Gourd">
+                <div class="product-details">
+                    <p class="stock">In Stock - 1 kg</p>
+                    <h3>Ash Gourd</h3>
+                    <p class="price">₹40</p>
+                    <div class="quantity">
+                        <button>-</button>
+                        <span>1</span>
+                        <button>+</button>
+                    </div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+            </div>
+            <div class="product-item" data-category="broccoli">
+                <img src="images\Broccoli.jpg" alt="Broccoli">
+                <div class="product-details">
+                    <p class="stock">In Stock - 500g</p>
+                    <h3>Broccoli</h3>
+                    <p class="price">₹80</p>
+                    <div class="quantity">
+                        <button>-</button>
+                        <span>1</span>
+                        <button>+</button>
+                    </div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+            </div>
+            <div class="product-item" data-category="cucumber">
+                <img src="images\Cucumber.webp" alt="Cucumber">
+                <div class="product-details">
+                    <p class="stock">In Stock - 1 kg</p>
+                    <h3>Cucumber</h3>
+                    <p class="price">₹30</p>
+                    <div class="quantity">
+                        <button>-</button>
+                        <span>1</span>
+                        <button>+</button>
+                    </div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+            </div>
+            <div class="product-item" data-category="potato">
+                <img src="images\Potato.webp" alt="Potato">
+                <div class="product-details">
+                    <p class="stock">In Stock - 1 kg</p>
+                    <h3>Potato</h3>
+                    <p class="price">₹50</p>
+                    <div class="quantity">
+                        <button>-</button>
+                        <span>1</span>
+                        <button>+</button>
+                    </div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+            </div>
+            <div class="product-item" data-category="capsicum">
+                <img src="images\Capsicum.jpg" alt="Capsicum">
+                <div class="product-details">
+                    <p class="stock">In Stock - 500g</p>
+                    <h3>Capsicum</h3>
+                    <p class="price">₹70</p>
+                    <div class="quantity">
+                        <button>-</button>
+                        <span>1</span>
+                        <button>+</button>
+                    </div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+            </div>
+            <div class="product-item" data-category="clusterbeans">
+                <img src="images\Cluster Beans.jpeg" alt="Cluster Beans">
+                <div class="product-details">
+                    <p class="stock">In Stock - 500g</p>
+                    <h3>Cluster Beans</h3>
+                    <p class="price">₹60</p>
+                    <div class="quantity">
+                        <button>-</button>
+                        <span>1</span>
+                        <button>+</button>
+                    </div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+            </div>
+            <div class="product-item" data-category="ginger">
+                <img src="images\ginger.jpeg" alt="Ginger">
+                <div class="product-details">
+                    <p class="stock">In Stock - 250g</p>
+                    <h3>Ginger</h3>
+                    <p class="price">₹30</p>
+                    <div class="quantity">
+                        <button>-</button>
+                        <span>1</span>
+                        <button>+</button>
+                    </div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+            </div>
+            <div class="product-item" data-category="onion">
+                <img src="images\onion.jpeg" alt="Onion">
+                <div class="product-details">
+                    <p class="stock">In Stock - 1 kg</p>
+                    <h3>Onion</h3>
+                    <p class="price">₹40</p>
+                    <div class="quantity">
+                        <button>-</button>
+                        <span>1</span>
+                        <button>+</button>
+                    </div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+            </div>
+
+            <!-- Oil and Kitchen Items -->
+            <div class="product-item" data-category="bakeware">
+                <img src="images\Bakeware.jpeg" alt="Bakeware">
+                <div class="product-details">
+                    <p class="stock">In Stock - 1 set</p>
+                    <h3>Bakeware</h3>
+                    <p class="price">₹800</p>
+                    <div class="quantity">
+                        <button>-</button>
+                        <span>1</span>
+                        <button>+</button>
+                    </div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+            </div>
+            <div class="product-item" data-category="cookware">
+                <img src="images\Cookware.avif" alt="Cookware">
+                <div class="product-details">
+                    <p class="stock">In Stock - 1 unit</p>
+                    <h3>Cookware</h3>
+                    <p class="price">₹1000</p>
+                    <div class="quantity">
+                        <button>-</button>
+                        <span>1</span>
+                        <button>+</button>
+                    </div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+            </div>
+            <div class="product-item" data-category="fryingpan">
+                <img src="images\fryingpan.jpeg" alt="Frying Pan">
+                <div class="product-details">
+                    <p class="stock">In Stock - 1 unit</p>
+                    <h3>Frying Pan</h3>
+                    <p class="price">₹500</p>
+                    <div class="quantity">
+                        <button>-</button>
+                        <span>1</span>
+                        <button>+</button>
+                    </div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+            </div>
+            <div class="product-item" data-category="kadhaiwoks">
+                <img src="images\Kadhai and Woks.jpg" alt="Kadhai and Woks">
+                <div class="product-details">
+                    <p class="stock">In Stock - 1 unit</p>
+                    <h3>Kadhai and Woks</h3>
+                    <p class="price">₹700</p>
+                    <div class="quantity">
+                        <button>-</button>
+                        <span>1</span>
+                        <button>+</button>
+                    </div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+            </div>
+            <div class="product-item" data-category="instantpot">
+                <img src="images\Instant Pot.jpeg" alt="Instant Pot">
+                <div class="product-details">
+                    <p class="stock">In Stock - 1 unit</p>
+                    <h3>Instant Pot</h3>
+                    <p class="price">₹6000</p>
+                    <div class="quantity">
+                        <button>-</button>
+                        <span>1</span>
+                        <button>+</button>
+                    </div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+            </div>
+
+            <!-- Dessert Items -->
+            <div class="product-item" data-category="cakes">
+                <img src="images\cakes.jpeg" alt="Cakes">
+                <div class="product-details">
+                    <p class="stock">In Stock - 1 kg</p>
+                    <h3>Cakes</h3>
+                    <p class="price">₹300</p>
+                    <div class="quantity">
+                        <button>-</button>
+                        <span>1</span>
+                        <button>+</button>
+                    </div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+            </div>
+            <div class="product-item" data-category="cupcakes">
+                <img src="images\cupcakes.webp" alt="Cupcakes">
+                <div class="product-details">
+                    <p class="stock">In Stock - 6 pcs</p>
+                    <h3>Cupcakes</h3>
+                    <p class="price">₹150</p>
+                    <div class="quantity">
+                        <button>-</button>
+                        <span>1</span>
+                        <button>+</button>
+                    </div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+            </div>
+            <div class="product-item" data-category="cookies">
+                <img src="images\Cookies.jpeg" alt="Cookies">
+                <div class="product-details">
+                    <p class="stock">In Stock - 500g</p>
+                    <h3>Cookies</h3>
+                    <p class="price">₹150</p>
+                    <div class="quantity">
+                        <button>-</button>
+                        <span>1</span>
+                        <button>+</button>
+                    </div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+            </div>
+            <div class="product-item" data-category="candies">
+                <img src="images\Candies.jpg" alt="Candies">
+                <div class="product-details">
+                    <p class="stock">In Stock - 200g</p>
+                    <h3>Candies</h3>
+                    <p class="price">₹100</p>
+                    <div class="quantity">
+                        <button>-</button>
+                        <span>1</span>
+                        <button>+</button>
+                    </div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+            </div>
+            <div class="product-item" data-category="custards">
+                <img src="images\Custards.jpeg" alt="Custards">
+                <div class="product-details">
+                    <p class="stock">In Stock - 500g</p>
+                    <h3>Custards</h3>
+                    <p class="price">₹120</p>
+                    <div class="quantity">
+                        <button>-</button>
+                        <span>1</span>
+                        <button>+</button>
+                    </div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+            </div>
+
+            <!-- Pet Foods and Items -->
+            <div class="product-item" data-category="pedigree">
+                <img src="images\Pedigree.jpg" alt="Pedigree">
+                <div class="product-details">
+                    <p class="stock">In Stock - 1 kg</p>
+                    <h3>Pedigree</h3>
+                    <p class="price">₹500</p>
+                    <div class="quantity">
+                        <button>-</button>
+                        <span>1</span>
+                        <button>+</button>
+                    </div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+            </div>
+            <div class="product-item" data-category="drools">
+                <img src="images\Drools.jpg" alt="Drools">
+                <div class="product-details">
+                    <p class="stock">In Stock - 1 kg</p>
+                    <h3>Drools</h3>
+                    <p class="price">₹450</p>
+                    <div class="quantity">
+                        <button>-</button>
+                        <span>1</span>
+                        <button>+</button>
+                    </div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+            </div>
+            <div class="product-item" data-category="royalcanin">
+                <img src="images\Royal Canin.jpg" alt="Royal Canin">
+                <div class="product-details">
+                    <p class="stock">In Stock - 1 kg</p>
+                    <h3>Royal Canin</h3>
+                    <p class="price">₹600</p>
+                    <div class="quantity">
+                        <button>-</button>
+                        <span>1</span>
+                        <button>+</button>
+                    </div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+            </div>
+            <div class="product-item" data-category="purinasupercoat">
+                <img src="images\Purina Supercoat.jpg" alt="Purina Supercoat">
+                <div class="product-details">
+                    <p class="stock">In Stock - 1 kg</p>
+                    <h3>Purina Supercoat</h3>
+                    <p class="price">₹550</p>
+                    <div class="quantity">
+                        <button>-</button>
+                        <span>1</span>
+                        <button>+</button>
+                    </div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+            </div>
+            <div class="product-item" data-category="meatup">
+                <img src="images\meatup.jpeg" alt="Meat Up">
+                <div class="product-details">
+                    <p class="stock">In Stock - 1 kg</p>
+                    <h3>Meat Up</h3>
+                    <p class="price">₹480</p>
+                    <div class="quantity">
+                        <button>-</button>
+                        <span>1</span>
+                        <button>+</button>
+                    </div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+            </div>
+            <div class="product-item" data-category="hillsdiet">
+                <img src="images\Hill’s Science Diet.jpeg" alt="Hill’s Science Diet">
+                <div class="product-details">
+                    <p class="stock">In Stock - 1 kg</p>
+                    <h3>Hill’s Science Diet</h3>
+                    <p class="price">₹700</p>
+                    <div class="quantity">
+                        <button>-</button>
+                        <span>1</span>
+                        <button>+</button>
+                    </div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+            </div>
+
+            <!-- Snacks -->
+            <div class="product-item" data-category="samosa">
+                <img src="images\samosa.webp" alt="Samosa">
+                <div class="product-details">
+                    <p class="stock">In Stock - 4 pcs</p>
+                    <h3>Samosa</h3>
+                    <p class="price">₹50</p>
+                    <div class="quantity">
+                        <button>-</button>
+                        <span>1</span>
+                        <button>+</button>
+                    </div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+            </div>
+            <div class="product-item" data-category="vadapav">
+                <img src="images\Vada Pav.jpeg" alt="Vada Pav">
+                <div class="product-details">
+                    <p class="stock">In Stock - 1 pc</p>
+                    <h3>Vada Pav</h3>
+                    <p class="price">₹20</p>
+                    <div class="quantity">
+                        <button>-</button>
+                        <span>1</span>
+                        <button>+</button>
+                    </div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+            </div>
+            <div class="product-item" data-category="meduvada">
+                <img src="images\Medu Vada.jpeg" alt="Medu Vada">
+                <div class="product-details">
+                    <p class="stock">In Stock - 2 pcs</p>
+                    <h3>Medu Vada</h3>
+                    <p class="price">₹30</p>
+                    <div class="quantity">
+                        <button>-</button>
+                        <span>1</span>
+                        <button>+</button>
+                    </div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+            </div>
+            <div class="product-item" data-category="popcorn">
+                <img src="images\popcorn.jpg" alt="Popcorn">
+                <div class="product-details">
+                    <p class="stock">In Stock - 100g</p>
+                    <h3>Popcorn</h3>
+                    <p class="price">₹50</p>
+                    <div class="quantity">
+                        <button>-</button>
+                        <span>1</span>
+                        <button>+</button>
+                    </div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+            </div>
+            <div class="product-item" data-category="chips">
+                <img src="images\chips.jpeg" alt="Chips">
+                <div class="product-details">
+                    <p class="stock">In Stock - 150g</p>
+                    <h3>Chips</h3>
+                    <p class="price">₹40</p>
+                    <div class="quantity">
+                        <button>-</button>
+                        <span>1</span>
+                        <button>+</button>
+                    </div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+            </div>
+            <div class="product-item" data-category="trailmix">
+                <img src="images\Trail Mix.jpeg" alt="Trail Mix">
+                <div class="product-details">
+                    <p class="stock">In Stock - 200g</p>
+                    <h3>Trail Mix</h3>
+                    <p class="price">₹120</p>
+                    <div class="quantity">
+                        <button>-</button>
+                        <span>1</span>
+                        <button>+</button>
+                    </div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+            </div>
+            <div class="product-item" data-category="fruitsnacks">
+                <img src="images\Fruit Snacks.jpeg" alt="Fruit Snacks">
+                <div class="product-details">
+                    <p class="stock">In Stock - 100g</p>
+                    <h3>Fruit Snacks</h3>
+                    <p class="price">₹80</p>
+                    <div class="quantity">
+                        <button>-</button>
+                        <span>1</span>
+                        <button>+</button>
+                    </div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+            </div>
+            <div class="product-item" data-category="ricecakes">
+                <img src="images\ricecake.webp" alt="Rice Cakes">
+                <div class="product-details">
+                    <p class="stock">In Stock - 150g</p>
+                    <h3>Rice Cakes</h3>
+                    <p class="price">₹90</p>
+                    <div class="quantity">
+                        <button>-</button>
+                        <span>1</span>
+                        <button>+</button>
+                    </div>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+            </div>
+        </div>
+    </section>
+    <script src="categories.js"></script>
+
+</body>
+</html>
